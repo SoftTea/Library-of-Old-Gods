@@ -60,12 +60,17 @@ function create ()
    
     //  Now let's create some ledges
     platforms.create(215, 70, 'ground').setScale(.90).setTint(0xff0000).refreshBody();
+    this.add.text(200,65,"History")
     platforms.create(50, 150, 'ground').setScale(.5,1).refreshBody();
+    this.add.text(50,145,"Local Lore")
     platforms.create(215, 235, 'ground').setScale(.9).refreshBody();
     platforms.create(135, 330, 'ground').setScale(.68,1).refreshBody();
+    this.add.text(135,325,"Arcana")
     platforms.create(215, 415, 'ground').setScale(.9).refreshBody();
     platforms.create(50, 495, 'ground').setScale(.5,1).refreshBody();
+    this.add.text(50,490,"Local Lore")
     platforms.create(215, 580, 'ground').setScale(.90).refreshBody();
+    this.add.text(200,575,"Science")
 
     //work station
     platforms.create(650, 325, 'ground').setScale(.1,17).refreshBody();
@@ -85,9 +90,14 @@ function create ()
     crystal = this.physics.add.staticGroup();
     crystal.create(500, 400, 'crystal').setScale(.4).refreshBody();
     crystal.create(30, 300, 'crystal').setScale(.5).refreshBody();
+
+    crystal.children.entries[0].name = "test"
    
 
+    this.add.text(895,295,"Check In")
     computer.create(992,320,'mysprite',"sprite76").setScale(3).refreshBody();
+
+    computer.children.entries[0].name = 'computer'
 
 //     // The player and its settings
     player = this.physics.add.sprite(100, 450, 'dude');
@@ -145,7 +155,7 @@ function create ()
 //     //  Collide the player and the stars with the platforms
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(player, crystal, collectCrystal);
-    this.physics.add.collider(player, computer, nextToComputer);
+    // this.physics.add.collider(player, computer, nextToComputer);
 //     this.physics.add.collider(bombs, platforms);
 
 //     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
@@ -162,6 +172,8 @@ function update ()
     // {
     //     return;
     // }
+    nextToComputer(player,computer);
+    
     aButton = false;
 
     if (cursors.left.isDown)
@@ -198,7 +210,8 @@ function update ()
 
 function collectCrystal (player, crystal)
 {
-    console.log(crystal)
+    console.log('player',player)
+    console.log('crystal', crystal)
     if (aButton){
         crystal.disableBody(true, true);
         bookBag.push('blue crystal')
@@ -231,7 +244,12 @@ function collectCrystal (player, crystal)
 function nextToComputer (player, computer)
 {
     // this.physics.pause();
-    console.log('test')
+    // console.log('player',player.y, "computerY",player.y-computer.children.entries[0].y );
+    
+    if(player.x - computer.children.entries[0].x < 0 && player.x - computer.children.entries[0].x > (-40) && player.y - computer.children.entries[0].y > -15 && player.y - computer.children.entries[0].y < (13) && aButton) {
+        console.log('next too')
+    }
+
 
     // player.setTint(0xff0000);
 
