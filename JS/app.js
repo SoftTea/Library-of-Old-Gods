@@ -159,7 +159,7 @@ function create ()
 //     this.physics.add.collider(bombs, platforms);
 
 //     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-    this.physics.add.overlap(player, crystal, collectCrystal, null, this);
+    // this.physics.add.overlap(player, crystal, collectCrystal, null, this);
 
     
     
@@ -172,7 +172,7 @@ function update ()
     // {
     //     return;
     // }
-    nextToComputer(player,computer);
+    nextTo(player,crystal);
     
     aButton = false;
 
@@ -210,8 +210,8 @@ function update ()
 
 function collectCrystal (player, crystal)
 {
-    console.log('player',player)
-    console.log('crystal', crystal)
+    // console.log('player',player)
+    // console.log('crystal', crystal)
     if (aButton){
         crystal.disableBody(true, true);
         bookBag.push('blue crystal')
@@ -241,14 +241,24 @@ function collectCrystal (player, crystal)
     // }
 }
 
-function nextToComputer (player, computer)
+function nextTo (player, group)
 {
     // this.physics.pause();
-    // console.log('player',player.y, "computerY",player.y-computer.children.entries[0].y );
     
-    if(player.x - computer.children.entries[0].x < 0 && player.x - computer.children.entries[0].x > (-40) && player.y - computer.children.entries[0].y > -15 && player.y - computer.children.entries[0].y < (13) && aButton) {
-        console.log('next too')
+for(let i = 0; i<group.children.entries.length; i++){
+    const diffOfY = player.y-group.children.entries[i].y;
+    const diffOfX = player.x-group.children.entries[i].x;
+    const widthOfPlayer = player.width;
+    const heightOfPlayer = player.height+7;
+
+
+    console.log('diffOfX', diffOfX, "diffOfY", diffOfY, 'diffOfWidth', widthOfPlayer, "height", heightOfPlayer );
+    
+    if( diffOfX < widthOfPlayer && diffOfX > (-widthOfPlayer) && diffOfY > (-heightOfPlayer) && diffOfY < (heightOfPlayer) && aButton) {
+        console.log('next too');
+        group.children.entries[i].disableBody(true, true);
     }
+}
 
 
     // player.setTint(0xff0000);
