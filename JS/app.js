@@ -20,6 +20,7 @@ let player;
 let crystal;
 let platforms;
 let cursors;
+let book;
 let aButton = false;
 let score = 0;
 let gameOver = false;
@@ -36,6 +37,7 @@ function preload ()
     this.load.image('bomb', 'assets/bomb.png');
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
     this.load.spritesheet('crystal', 'assets/!$floatingrocks_3.png', {frameWidth: 45, frameHeight: 150})
+    this.load.spritesheet('book','assets/book_sprite.png',{frameWidth: 215, frameHeight: 220})
 }
 
 function create ()
@@ -45,10 +47,10 @@ function create ()
 
 //     //  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = this.physics.add.staticGroup();
-
+    book = this.physics.add.staticGroup();
 //     //  Here we create the ground.
 //     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-
+   
     //  Now let's create some ledges
     platforms.create(215, 70, 'ground').setScale(.90).setTint(0xff0000).refreshBody();
     platforms.create(50, 150, 'ground').setScale(.5,1).refreshBody();
@@ -67,6 +69,8 @@ function create ()
 
     platforms.create(980, 70, 'ground').setScale(.2,1).refreshBody();
     platforms.create(900, 581, 'ground').setScale(.6,1).refreshBody();
+
+    book.create(450,500,'book').setScale(.15).refreshBody();
 
     
     crystal = this.physics.add.staticGroup();
