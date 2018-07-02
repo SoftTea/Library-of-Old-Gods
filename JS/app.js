@@ -21,11 +21,13 @@ let crystal;
 let platforms;
 let cursors;
 let book;
+let computer;
 let aButton = false;
 let score = 0;
 let gameOver = false;
 let scoreText;
 const bookBag = [];
+
 
 var game = new Phaser.Game(config);
 
@@ -38,6 +40,8 @@ function preload ()
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
     this.load.spritesheet('crystal', 'assets/!$floatingrocks_3.png', {frameWidth: 45, frameHeight: 150})
     this.load.spritesheet('book','assets/book_sprite.png',{frameWidth: 215, frameHeight: 220})
+   
+    this.load.atlas('mysprite', 'assets/blacknwhite_p=1.png', 'assets/sprites.json');
 }
 
 function create ()
@@ -48,6 +52,9 @@ function create ()
 //     //  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = this.physics.add.staticGroup();
     book = this.physics.add.staticGroup();
+  
+    computer = this.physics.add.staticGroup();
+    
 //     //  Here we create the ground.
 //     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
    
@@ -73,10 +80,14 @@ function create ()
     book.create(450,500,'book').setScale(.15).refreshBody();
 
     
+
+    
     crystal = this.physics.add.staticGroup();
     crystal.create(500, 400, 'crystal').setScale(.4).refreshBody();
     crystal.create(30, 300, 'crystal').setScale(.5).refreshBody();
-    crystal.name = 't'
+   
+
+    computer.create(992,320,'mysprite',"sprite76").setScale(3).refreshBody();
 
 //     // The player and its settings
     player = this.physics.add.sprite(100, 450, 'dude');
@@ -134,6 +145,7 @@ function create ()
 //     //  Collide the player and the stars with the platforms
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(player, crystal, collectCrystal);
+    this.physics.add.collider(player, computer, nextToComputer);
 //     this.physics.add.collider(bombs, platforms);
 
 //     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
@@ -216,9 +228,10 @@ function collectCrystal (player, crystal)
     // }
 }
 
-function hitBomb (player, bomb)
+function nextToComputer (player, computer)
 {
     // this.physics.pause();
+    console.log('test')
 
     // player.setTint(0xff0000);
 
