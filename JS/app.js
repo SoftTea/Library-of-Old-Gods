@@ -172,7 +172,7 @@ function update ()
     // {
     //     return;
     // }
-    nextTo(player,crystal);
+    nextTo(player,computer);
     
     aButton = false;
 
@@ -252,7 +252,7 @@ for(let i = 0; i<group.children.entries.length; i++){
     const heightOfPlayer = player.height+7;
 
 
-    console.log('diffOfX', diffOfX, "diffOfY", diffOfY, 'diffOfWidth', widthOfPlayer, "height", heightOfPlayer );
+    // console.log('diffOfX', diffOfX, "diffOfY", diffOfY, 'diffOfWidth', widthOfPlayer, "height", heightOfPlayer );
     
     if( diffOfX < widthOfPlayer && diffOfX > (-widthOfPlayer) && diffOfY > (-heightOfPlayer) && diffOfY < (heightOfPlayer) && aButton) {
         console.log('next too');
