@@ -410,7 +410,7 @@ function nextTo(player, group) {
         // console.log('diffOfX', diffOfX, "diffOfY", diffOfY, 'diffOfWidth', widthOfPlayer, "height", heightOfPlayer );
         
          if (diffOfX < widthOfPlayer && diffOfX > (-widthOfPlayer) && diffOfY > (-heightOfPlayer) && diffOfY < (heightOfPlayer) && aButton.isDown) {
-             console.log(i);
+             
             bookBag.push(group.children.entries[i].name);
 
         
