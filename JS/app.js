@@ -16,6 +16,15 @@ var config = {
     }
 };
 
+    class Book{
+        constructor(type,x,y,color){
+            this.type = type;
+            this.x = x;
+            this.y = y;
+            this.color = color;
+
+        }
+    }
 let player;
 let crystal;
 let platforms;
@@ -27,6 +36,27 @@ let score = 0;
 let gameOver = false;
 let scoreText;
 const bookBag = [];
+let bookCheck;
+const exorcise = {
+
+};
+const bookReturn = {
+
+};
+const photoCopy = {
+
+
+};
+const monsterClear = {
+
+};
+const colorCodes = {
+    yellow: 0xF3F727,
+    green: 0x3BC62B,
+    blue: 0x2B3FC6,
+    purple: 0xB936ED
+}
+
 
 
 var game = new Phaser.Game(config);
@@ -42,6 +72,7 @@ function preload ()
     this.load.spritesheet('book','assets/book_sprite.png',{frameWidth: 215, frameHeight: 220})
    
     this.load.atlas('mysprite', 'assets/blacknwhite_p=1.png', 'assets/sprites.json');
+    this.load.atlas('consumable', 'assets/tiny_consumables.png', 'assets/sprites2.json');
 }
 
 function create ()
@@ -52,25 +83,31 @@ function create ()
 //     //  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = this.physics.add.staticGroup();
     book = this.physics.add.staticGroup();
-  
+    bookCheck = this.physics.add.staticGroup();
+
     computer = this.physics.add.staticGroup();
     
 //     //  Here we create the ground.
 //     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
    
-    //  Now let's create some ledges
+    //  Shelfs / Walls
     platforms.create(215, 70, 'ground').setScale(.90).setTint(0xff0000).refreshBody();
     this.add.text(200,65,"History")
-    platforms.create(50, 150, 'ground').setScale(.5,1).refreshBody();
+     platforms.create(50, 150, 'ground').setScale(.5,1).refreshBody();
     this.add.text(50,145,"Local Lore")
     platforms.create(215, 235, 'ground').setScale(.9).refreshBody();
     platforms.create(135, 330, 'ground').setScale(.68,1).refreshBody();
-    this.add.text(135,325,"Arcana")
+    this.add.text(135,325,"Occult")
+    
     platforms.create(215, 415, 'ground').setScale(.9).refreshBody();
     platforms.create(50, 495, 'ground').setScale(.5,1).refreshBody();
     this.add.text(50,490,"Local Lore")
-    platforms.create(215, 580, 'ground').setScale(.90).refreshBody();
-    this.add.text(200,575,"Science")
+    const science = platforms.create(215, 580, 'ground').setScale(.90).refreshBody();
+    this.add.text(200,575,"Science");
+    console.log(science);
+
+
+    
 
     //work station
     platforms.create(650, 325, 'ground').setScale(.1,17).refreshBody();
@@ -82,18 +119,46 @@ function create ()
     platforms.create(980, 70, 'ground').setScale(.2,1).refreshBody();
     platforms.create(900, 581, 'ground').setScale(.6,1).refreshBody();
 
+    // Book Check images 
+
+    bookCheck.create(650,200,'consumable','sprite19').setScale(3).refreshBody();
+    
+    this.add.text(600,160, "Book Check");
+
+    bookCheck.create(650,500,'consumable','sprite19').setScale(3).refreshBody();
+
+    this.add.text(600,450, "Book Check");
+
+    // Photocopy
+
+    this.add.text(895,100, "Photocopy")
+    photoCopy.image = this.physics.add.sprite(992,150, 'consumable', 'sprite29').setScale(2.5);
+
+
     book.create(450,500,'book').setScale(.15).refreshBody();
 
+    // Exorcize station 
+    this.add.text(830,500, 'Exorcise').setAngle(45);
+    exorcise.image = this.physics.add.sprite(850,581, 'consumable', 'sprite27').setScale(2.5);
+
+    // MonsterClear
+
+    this.add.text(720,400, "monster clear")
+    monsterClear.image = this.physics.add.sprite(775,430, 'bomb').setScale(1.5).setImmovable();
+
     
 
     
-    crystal = this.physics.add.staticGroup();
-    crystal.create(500, 400, 'crystal').setScale(.4).refreshBody();
-    crystal.create(30, 300, 'crystal').setScale(.5).refreshBody();
 
-    crystal.children.entries[0].name = "test"
+    
+    // crystal = this.physics.add.staticGroup();
+    // crystal.create(500, 400, 'crystal').setScale(.4).refreshBody();
+    // crystal.create(30, 300, 'crystal').setScale(.5).refreshBody();
+
+    // crystal.children.entries[0].name = "test"
    
 
+    // Computer - Chec In
     this.add.text(895,295,"Check In")
     computer.create(992,320,'mysprite',"sprite76").setScale(3).refreshBody();
 
@@ -155,9 +220,18 @@ function create ()
 //     //  Collide the player and the stars with the platforms
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(player, crystal, collectCrystal);
+    this.physics.add.collider(player, monsterClear.image);
+    this.physics.add.collider(player, book);
     // this.physics.add.collider(player, computer, nextToComputer);
 //     this.physics.add.collider(bombs, platforms);
 
+
+// Timed Events ****
+
+timedEvent = this.time.addEvent({ delay: 1000, callback: randomHistory, callbackScope: this, loop: true });
+this.time.addEvent({ delay: 1000, callback: randomLocalLore, callbackScope: this, loop: true });
+this.time.addEvent({ delay: 1000, callback: randomOccult, callbackScope: this, loop: true });
+this.time.addEvent({ delay: 1000, callback: randomScience, callbackScope: this, loop: true });
 //     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     // this.physics.add.overlap(player, crystal, collectCrystal, null, this);
 
@@ -267,3 +341,44 @@ for(let i = 0; i<group.children.entries.length; i++){
 
     // gameOver = true;
 }
+
+function randomHistory ()
+{
+    
+    
+    book.create(getRandomIntInclusive(45,380),70,'book').setScale(.12).refreshBody().setTint(colorCodes.yellow);
+    
+}
+
+function randomOccult ()
+{
+    
+    
+    book.create(getRandomIntInclusive(0,265),330,'book').setScale(.12).refreshBody().setTint(colorCodes.green);
+    
+}
+
+function randomScience ()
+{
+    
+    
+    book.create(getRandomIntInclusive(45,380),580,'book').setScale(.12).refreshBody().setTint(colorCodes.purple);
+    
+}
+
+function randomLocalLore () {
+
+    const randomNumber = getRandomIntInclusive(0,1);
+    if(randomNumber===0) {
+    book.create(getRandomIntInclusive(0,150),150,'book').setScale(.12).refreshBody().setTint(colorCodes.blue);} else{
+        book.create(getRandomIntInclusive(0,150),495,'book').setScale(.12).refreshBody().setTint(colorCodes.blue);
+    }
+}
+
+
+
+function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
+  }
