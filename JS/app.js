@@ -1,7 +1,7 @@
 var config = {
     type: Phaser.AUTO,
     width: 1125,
-    height: 650,
+    height: 700,
     physics: {
         default: 'arcade',
         arcade: {
@@ -34,7 +34,7 @@ let book;
 let computer;
 let aButton;
 let sButton;
-let score = 0;
+let score;
 let gameOver = false;
 let scoreText;
 const bookBag = [];
@@ -93,6 +93,8 @@ function create() {
     //     //  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = this.physics.add.staticGroup();
     book = this.physics.add.staticGroup();
+    
+    console.log(book)
     bookCheck = this.physics.add.staticGroup();
 
     computer = this.physics.add.staticGroup();
@@ -100,6 +102,7 @@ function create() {
     //     //  Here we create the ground.
     //     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
 
+    platforms.create(0,680, 'ground').setScale(6,1.5).setTint(colorCodes.blue).refreshBody();
     //  Shelfs / Walls
     platforms.create(215, 70, 'ground').setScale(.90).setTint(0xff0000).refreshBody();
     this.add.text(200, 65, "History")
@@ -180,6 +183,8 @@ function create() {
     // text to display when the player has 4 books
     bookBagFull = this.add.text(250,400,'Your hands are full!');
     bookBagFull.visible = false;
+
+    
     
     
     // bookBagFull = this.add.text(0,0,'Your hands are full');
@@ -297,9 +302,15 @@ function update() {
     // }
     bookBagFull.x = player.x- player.width;
     bookBagFull.y = player.y -player.height;
+
+    score = this.add.group({ key: 'book', frame: 0, repeat: bookBag.length, setXY: { x: -20, y: 680, stepX: 40 },setScale: {x:.2, y:.2} });
+
+
     
     if(bookBag.length<4) {
-    nextTo(player, book); } else{
+    nextTo(player, book);
+     
+    } else{
         bookBagFull.visible = true;
     }
 
@@ -399,8 +410,13 @@ function nextTo(player, group) {
         // console.log('diffOfX', diffOfX, "diffOfY", diffOfY, 'diffOfWidth', widthOfPlayer, "height", heightOfPlayer );
         
          if (diffOfX < widthOfPlayer && diffOfX > (-widthOfPlayer) && diffOfY > (-heightOfPlayer) && diffOfY < (heightOfPlayer) && aButton.isDown) {
+             console.log(i);
             bookBag.push(group.children.entries[i].name);
+
+        
+            
             group.children.entries[i].destroy();
+            return;
         }
     }
 
@@ -416,7 +432,7 @@ function randomHistory() {
 
 
     const historyBook = book.create(getRandomIntInclusive(45, 380), 70, 'book').setScale(.12).refreshBody().setTint(colorCodes.yellow);
-    historyBook.name = 'History';
+    historyBook.name = 'history';
     // console.log(historyBook);
 
 }
@@ -424,14 +440,16 @@ function randomHistory() {
 function randomOccult() {
 
 
-    book.create(getRandomIntInclusive(0, 265), 330, 'book').setScale(.12).refreshBody().setTint(colorCodes.green);
+    const occultBook = book.create(getRandomIntInclusive(0, 265), 330, 'book').setScale(.12).refreshBody().setTint(colorCodes.green);
+    occultBook.name = 'occult'
 
 }
 
 function randomScience() {
 
 
-    book.create(getRandomIntInclusive(45, 380), 580, 'book').setScale(.12).refreshBody().setTint(colorCodes.purple);
+    const scienceBook = book.create(getRandomIntInclusive(45, 380), 580, 'book').setScale(.12).refreshBody().setTint(colorCodes.purple);
+    scienceBook.name = 'science'
 
 }
 
@@ -439,9 +457,11 @@ function randomLocalLore() {
 
     const randomNumber = getRandomIntInclusive(0, 1);
     if (randomNumber === 0) {
-        book.create(getRandomIntInclusive(0, 150), 150, 'book').setScale(.12).refreshBody().setTint(colorCodes.blue);
+        const localLore = book.create(getRandomIntInclusive(0, 150), 150, 'book').setScale(.12).refreshBody().setTint(colorCodes.blue);
+        localLore.name = 'local'
     } else {
-        book.create(getRandomIntInclusive(0, 150), 495, 'book').setScale(.12).refreshBody().setTint(colorCodes.blue);
+        const localLore = book.create(getRandomIntInclusive(0, 150), 495, 'book').setScale(.12).refreshBody().setTint(colorCodes.blue);
+        localLore.name = 'local'
     }
 }
 
