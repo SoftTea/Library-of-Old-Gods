@@ -254,7 +254,7 @@ function create() {
 
     //     //  Collide the player and the stars with the platforms
     this.physics.add.collider(player, platforms);
-    this.physics.add.collider(player, crystal, collectCrystal);
+    // this.physics.add.collider(player, crystal, collectCrystal);
     this.physics.add.collider(player, monsterClear.image);
     this.physics.add.collider(player, book);
     // this.physics.add.collider(player, computer, nextToComputer);
@@ -300,12 +300,20 @@ function update() {
     // {
     //     return;
     // }
+
+    //Aligns text over player
     bookBagFull.x = player.x- player.width;
     bookBagFull.y = player.y -player.height;
 
-    score = this.add.group({ key: 'book', frame: 0, repeat: bookBag.length, setXY: { x: -20, y: 680, stepX: 40 },setScale: {x:.2, y:.2} });
+    // Bookbag display
+    // score = this.add.group({ key: 'book', frame: 0, repeat: bookBag.length, setXY: { x: -20, y: 680, stepX: 40 },setScale: {x:.2, y:.2} });
+    // console.log(score)
 
-
+    // if(bookBag.length>0) {
+    //     console.log('test')
+    //     book.create(0, 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.yellow);
+    // }
+    
     
     if(bookBag.length<4) {
     nextTo(player, book);
@@ -410,12 +418,41 @@ function nextTo(player, group) {
         // console.log('diffOfX', diffOfX, "diffOfY", diffOfY, 'diffOfWidth', widthOfPlayer, "height", heightOfPlayer );
         
          if (diffOfX < widthOfPlayer && diffOfX > (-widthOfPlayer) && diffOfY > (-heightOfPlayer) && diffOfY < (heightOfPlayer) && aButton.isDown) {
-             
-            bookBag.push(group.children.entries[i].name);
+             console.log(bookBag);
+            bookBag.push(group.children.entries[i]);
 
         
+            // bookBag[0].x = 0;
+             group.children.entries[i].destroy();
+        
+             for(let i = 0 ; i <bookBag.length; i++){
+                console.log(bookBag[i].name);
+
+                switch(bookBag[i].name){
+                    case 'science': 
+                   bookBag[i] = book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.purple);
+                    break;
+                    case 'local': 
+                    bookBag[i] =book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.blue);
+                    break
+                    case 'occult': 
+                    bookBag[i] = book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.green);
+                    break
+                    case 'history': 
+                    bookBag[i] = book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.yellow);
+                    break
+
+                }
+                // if (bookBag[i].name === 'science') {
+                //     book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.purple);
+                // } 
+                
+             }
+            // bookBag[0].active = true;
+            // bookBag[0].visible = true;
+            // bookBag[0].enable = true;
+            // bookBag[0].x= 457;
             
-            group.children.entries[i].destroy();
             return;
         }
     }
