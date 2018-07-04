@@ -134,11 +134,11 @@ function create() {
 
     // Book Check images 
 
-    bookCheck.create(650, 200, 'consumable', 'sprite19').setScale(3).refreshBody();
+    bookCheck.create(650, 200, 'consumable', 'sprite19').setScale(3).refreshBody().name = "bookCheck";
 
     this.add.text(600, 160, "Book Check");
 
-    bookCheck.create(650, 500, 'consumable', 'sprite19').setScale(3).refreshBody();
+    bookCheck.create(650, 500, 'consumable', 'sprite19').setScale(3).refreshBody().name = "bookCheck";
 
     this.add.text(600, 450, "Book Check");
 
@@ -148,7 +148,7 @@ function create() {
     photoCopy.image = this.physics.add.sprite(992, 150, 'consumable', 'sprite29').setScale(2.5);
 
 
-    book.create(450, 500, 'book').setScale(.15).refreshBody();
+    // book.create(450, 500, 'book').setScale(.15).refreshBody();
 
     // Exorcize station 
     this.add.text(830, 500, 'Exorcise').setAngle(45);
@@ -232,6 +232,16 @@ function create() {
 
     // })
     sButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+    
+    // bookCheck.children.entries[0].setInteractive();
+    // // bookCheck.children.entries[0].on('keyboard_S', clickHandler, this);
+    
+    //  this.input.on('gameobjectup', function (pointer, gameObject)
+    //  {  
+    //      console.log(gameObject)
+    //      gameObject.emit('clicked', gameObject);
+    //  }, this);
+     
 
     //     //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
     //     stars = this.physics.add.group({
@@ -257,6 +267,7 @@ function create() {
     // this.physics.add.collider(player, crystal, collectCrystal);
     this.physics.add.collider(player, monsterClear.image);
     this.physics.add.collider(player, book);
+    // this.physics.add.collider(player,bookCheck);
     // this.physics.add.collider(player, computer, nextToComputer);
     //     this.physics.add.collider(bombs, platforms);
 
@@ -305,16 +316,22 @@ function update() {
     bookBagFull.x = player.x- player.width;
     bookBagFull.y = player.y -player.height;
 
+   
     // Bookbag display
     // score = this.add.group({ key: 'book', frame: 0, repeat: bookBag.length, setXY: { x: -20, y: 680, stepX: 40 },setScale: {x:.2, y:.2} });
     // console.log(score)
+
+    booksInHandDisplay();
 
     // if(bookBag.length>0) {
     //     console.log('test')
     //     book.create(0, 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.yellow);
     // }
-    
-    
+
+    if(bookBag.length >= 4 && aButton.isDown) {
+       
+       doWhenNear ( nextTo1(player, bookCheck) );
+    }
     if(bookBag.length<4) {
     nextTo(player, book);
      
@@ -373,37 +390,69 @@ function update() {
 
 }
 
-function collectCrystal(player, crystal) {
-    // console.log('player',player)
-    // console.log('crystal', crystal)
-    if (aButton) {
-        crystal.disableBody(true, true);
-        bookBag.push('blue crystal')
+// function collectCrystal(player, crystal) {
+//     // console.log('player',player)
+//     // console.log('crystal', crystal)
+//     if (aButton) {
+//         crystal.disableBody(true, true);
+//         bookBag.push('blue crystal')
+//     }
+
+//     // //  Add and update the score
+//     // score += 10;
+//     // scoreText.setText('Score: ' + score);
+
+//     // if (stars.countActive(true) === 0)
+//     // {
+//     //     //  A new batch of stars to collect
+//     //     stars.children.iterate(function (child) {
+
+//     //         child.enableBody(true, child.x, 0, true, true);
+
+//     //     });
+
+//     //     var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+//     //     var bomb = bombs.create(x, 16, 'bomb');
+//     //     bomb.setBounce(1);
+//     //     bomb.setCollideWorldBounds(true);
+//     //     bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+//     //     bomb.allowGravity = false;
+
+//     // }
+// }
+
+function doWhenNear (nextToX) {
+    // console.log(nextToX);
+    if(nextToX.name === 'bookCheck'){
+        console.log('dowhennear');
+         bookBag[0].destroy();
+        // bookCheck.hold.x = nextToX.x;
+        // bookCheck.hold.y = nextToX.y;
     }
 
-    // //  Add and update the score
-    // score += 10;
-    // scoreText.setText('Score: ' + score);
-
-    // if (stars.countActive(true) === 0)
-    // {
-    //     //  A new batch of stars to collect
-    //     stars.children.iterate(function (child) {
-
-    //         child.enableBody(true, child.x, 0, true, true);
-
-    //     });
-
-    //     var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
-
-    //     var bomb = bombs.create(x, 16, 'bomb');
-    //     bomb.setBounce(1);
-    //     bomb.setCollideWorldBounds(true);
-    //     bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-    //     bomb.allowGravity = false;
-
-    // }
 }
+function nextTo1(player, group) {
+    // this.physics.pause();
+    // console.log(group);
+    for (let i = 0; i < group.children.entries.length; i++) {
+        const diffOfY = player.y - group.children.entries[i].y;
+        const diffOfX = player.x - group.children.entries[i].x;
+        const widthOfPlayer = player.width;
+        const heightOfPlayer = player.height + 7;
+
+
+
+
+
+        // console.log('diffOfX', diffOfX, "diffOfY", diffOfY, 'diffOfWidth', widthOfPlayer, "height", heightOfPlayer );
+        
+        if (diffOfX < 40 && diffOfX > (-40) && diffOfY > (-50) && diffOfY < (50) && aButton.isDown) {
+            //  console.log('test');
+             return group.children.entries[i]
+            //  return group.children.entries[i];
+          } 
+        } return false }
 
 function nextTo(player, group) {
     // this.physics.pause();
@@ -417,37 +466,40 @@ function nextTo(player, group) {
 
         // console.log('diffOfX', diffOfX, "diffOfY", diffOfY, 'diffOfWidth', widthOfPlayer, "height", heightOfPlayer );
         
-         if (diffOfX < widthOfPlayer && diffOfX > (-widthOfPlayer) && diffOfY > (-heightOfPlayer) && diffOfY < (heightOfPlayer) && aButton.isDown) {
+         if (diffOfX < 40 && diffOfX > (-40) && diffOfY > (-50) && diffOfY < (50) && aButton.isDown) {
              console.log(bookBag);
             bookBag.push(group.children.entries[i]);
 
         
-            // bookBag[0].x = 0;
+           
              group.children.entries[i].destroy();
         
-             for(let i = 0 ; i <bookBag.length; i++){
-                console.log(bookBag[i].name);
-
-                switch(bookBag[i].name){
-                    case 'science': 
-                   bookBag[i] = book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.purple);
-                    break;
-                    case 'local': 
-                    bookBag[i] =book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.blue);
-                    break
-                    case 'occult': 
-                    bookBag[i] = book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.green);
-                    break
-                    case 'history': 
-                    bookBag[i] = book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.yellow);
-                    break
-
-                }
-                // if (bookBag[i].name === 'science') {
-                //     book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.purple);
-                // } 
+            //  for(let i = 0 ; i <bookBag.length; i++){
                 
-             }
+
+            //     switch(bookBag[i].name){
+            //         case 'science': 
+            //        bookBag[i] = book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.purple);
+            
+            //        bookBag[i].name = "science"
+            //         break;
+            //         case 'local': 
+            //         bookBag[i] =book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.blue);
+            //         bookBag[i].name = "local"
+            //         break
+            //         case 'occult': 
+            //         bookBag[i] = book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.green);
+            //         bookBag[i].name = "occult"
+            //         break
+            //         case 'history': 
+            //         bookBag[i] = book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.yellow);
+            //         bookBag[i].name = "history"
+            //         break
+
+            //     }
+             
+                
+            //  }
             // bookBag[0].active = true;
             // bookBag[0].visible = true;
             // bookBag[0].enable = true;
@@ -463,6 +515,38 @@ function nextTo(player, group) {
     // player.anims.play('turn');
 
     // gameOver = true;
+}
+
+function booksInHandDisplay () {
+    if(bookBag.length >0 ) {
+
+    for(let i = 0 ; i <bookBag.length; i++){
+                
+
+        switch(bookBag[i].name){
+            case 'science': 
+           bookBag[i] = book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.purple);
+    
+           bookBag[i].name = "science"
+            break;
+            case 'local': 
+            bookBag[i] =book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.blue);
+            bookBag[i].name = "local"
+            break
+            case 'occult': 
+            bookBag[i] = book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.green);
+            bookBag[i].name = "occult"
+            break
+            case 'history': 
+            bookBag[i] = book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.yellow);
+            bookBag[i].name = "history"
+            break
+
+        }
+     
+        
+     }
+    }
 }
 
 function randomHistory() {
@@ -509,3 +593,4 @@ function getRandomIntInclusive(min, max) {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
 }
+
