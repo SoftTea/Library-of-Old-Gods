@@ -40,6 +40,7 @@ let scoreText;
 const bookBag = [];
 let bookBagFull;
 let bookCheck;
+const bookCheckContainer = [];
 const exorcise = {
 
 };
@@ -93,7 +94,7 @@ function create() {
     //     //  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = this.physics.add.staticGroup();
     book = this.physics.add.staticGroup();
-    
+
     console.log(book)
     bookCheck = this.physics.add.staticGroup();
 
@@ -102,7 +103,7 @@ function create() {
     //     //  Here we create the ground.
     //     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
 
-    platforms.create(0,680, 'ground').setScale(6,1.5).setTint(colorCodes.blue).refreshBody();
+    platforms.create(0, 680, 'ground').setScale(6, 1.5).setTint(colorCodes.blue).refreshBody();
     //  Shelfs / Walls
     platforms.create(215, 70, 'ground').setScale(.90).setTint(0xff0000).refreshBody();
     this.add.text(200, 65, "History")
@@ -178,18 +179,18 @@ function create() {
     computer.children.entries[0].name = 'computer'
 
     //     // The player and its settings
-    
+
     player = this.physics.add.sprite(300, 450, 'dude');
     // text to display when the player has 4 books
-    bookBagFull = this.add.text(250,400,'Your hands are full!');
+    bookBagFull = this.add.text(250, 400, 'Your hands are full!');
     bookBagFull.visible = false;
 
-    
-    
-    
+
+
+
     // bookBagFull = this.add.text(0,0,'Your hands are full');
-    
-    
+
+
     // player.setInteractive(this.input.makePixelPerfect())
     //     //  Player physics properties. Give the little guy a slight bounce.
     // player.setBounce(0.2);
@@ -232,16 +233,16 @@ function create() {
 
     // })
     sButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-    
+
     // bookCheck.children.entries[0].setInteractive();
     // // bookCheck.children.entries[0].on('keyboard_S', clickHandler, this);
-    
+
     //  this.input.on('gameobjectup', function (pointer, gameObject)
     //  {  
     //      console.log(gameObject)
     //      gameObject.emit('clicked', gameObject);
     //  }, this);
-     
+
 
     //     //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
     //     stars = this.physics.add.group({
@@ -313,10 +314,10 @@ function update() {
     // }
 
     //Aligns text over player
-    bookBagFull.x = player.x- player.width;
-    bookBagFull.y = player.y -player.height;
+    bookBagFull.x = player.x - player.width;
+    bookBagFull.y = player.y - player.height;
 
-   
+
     // Bookbag display
     // score = this.add.group({ key: 'book', frame: 0, repeat: bookBag.length, setXY: { x: -20, y: 680, stepX: 40 },setScale: {x:.2, y:.2} });
     // console.log(score)
@@ -328,21 +329,21 @@ function update() {
     //     book.create(0, 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.yellow);
     // }
 
-    if(bookBag.length >= 4 && aButton.isDown) {
-       
-       doWhenNear ( nextTo1(player, bookCheck) );
+    if (bookBag.length >= 4 && Phaser.Input.Keyboard.JustDown(aButton)) {
+
+        doWhenNear(nextTo1(player, bookCheck));
     }
-    if(bookBag.length<4) {
-    nextTo(player, book);
-     
-    } else{
+    if (bookBag.length < 4) {
+        nextTo(player, book);
+
+    } else {
         bookBagFull.visible = true;
     }
 
-    
+
     // console.log(aButton)
 
-    
+
 
     if (cursors.left.isDown && sButton.isDown) {
         player.setVelocityX(-320);
@@ -422,16 +423,25 @@ function update() {
 //     // }
 // }
 
-function doWhenNear (nextToX) {
+function doWhenNear(nextToX) {
     // console.log(nextToX);
-    if(nextToX.name === 'bookCheck'){
+    if (nextToX.name === 'bookCheck' && bookBag[0].name === 'science') {
         console.log('dowhennear');
-         bookBag[0].destroy();
+        let transfer = bookBag.shift();
+        bookBag.push('BookWaitingPickUp')
+        bookCheckContainer[0] = transfer
+        bookCheckContainer[0].x = nextToX.x;
+        bookCheckContainer[0].y = nextToX.y;
+        bookCheckContainer[0].refreshBody();
+        bookCheckContainer[0].depth = 99;
+        bookBagFull.setText("Books Proccesing");
+       
         // bookCheck.hold.x = nextToX.x;
         // bookCheck.hold.y = nextToX.y;
     }
 
 }
+
 function nextTo1(player, group) {
     // this.physics.pause();
     // console.log(group);
@@ -446,13 +456,15 @@ function nextTo1(player, group) {
 
 
         // console.log('diffOfX', diffOfX, "diffOfY", diffOfY, 'diffOfWidth', widthOfPlayer, "height", heightOfPlayer );
-        
+
         if (diffOfX < 40 && diffOfX > (-40) && diffOfY > (-50) && diffOfY < (50) && aButton.isDown) {
             //  console.log('test');
-             return group.children.entries[i]
+            return group.children.entries[i]
             //  return group.children.entries[i];
-          } 
-        } return false }
+        }
+    }
+    return false
+}
 
 function nextTo(player, group) {
     // this.physics.pause();
@@ -465,22 +477,21 @@ function nextTo(player, group) {
 
 
         // console.log('diffOfX', diffOfX, "diffOfY", diffOfY, 'diffOfWidth', widthOfPlayer, "height", heightOfPlayer );
-        
-         if (diffOfX < 40 && diffOfX > (-40) && diffOfY > (-50) && diffOfY < (50) && aButton.isDown) {
-             console.log(bookBag);
-            bookBag.push(group.children.entries[i]);
 
-        
-           
-             group.children.entries[i].destroy();
-        
+        if (diffOfX < 40 && diffOfX > (-40) && diffOfY > (-50) && diffOfY < (50) && aButton.isDown) {
+            console.log(bookBag);
+            bookBag.push(group.children.entries[i]);
+            
+
+            // group.children.entries[i].destroy();
+
             //  for(let i = 0 ; i <bookBag.length; i++){
-                
+
 
             //     switch(bookBag[i].name){
             //         case 'science': 
             //        bookBag[i] = book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.purple);
-            
+
             //        bookBag[i].name = "science"
             //         break;
             //         case 'local': 
@@ -497,14 +508,14 @@ function nextTo(player, group) {
             //         break
 
             //     }
-             
-                
+
+
             //  }
             // bookBag[0].active = true;
             // bookBag[0].visible = true;
             // bookBag[0].enable = true;
             // bookBag[0].x= 457;
-            
+
             return;
         }
     }
@@ -517,35 +528,48 @@ function nextTo(player, group) {
     // gameOver = true;
 }
 
-function booksInHandDisplay () {
-    if(bookBag.length >0 ) {
+function booksInHandDisplay() {
+    if (bookBag.length > 0) {
 
-    for(let i = 0 ; i <bookBag.length; i++){
-                
+        for (let i = 0; i < bookBag.length; i++) {
 
-        switch(bookBag[i].name){
-            case 'science': 
-           bookBag[i] = book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.purple);
-    
-           bookBag[i].name = "science"
-            break;
-            case 'local': 
-            bookBag[i] =book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.blue);
-            bookBag[i].name = "local"
-            break
-            case 'occult': 
-            bookBag[i] = book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.green);
-            bookBag[i].name = "occult"
-            break
-            case 'history': 
-            bookBag[i] = book.create( 20+ (i*30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.yellow);
-            bookBag[i].name = "history"
-            break
+
+            switch (bookBag[i].name) {
+                case 'science':
+                    bookBag[i].x = (20 + (i * 30));
+                    bookBag[i].y = 680 ;
+                   bookBag[i].refreshBody();
+                //    .setTint(colorCodes.purple);
+
+                    // bookBag[i].name = "science"
+                    break;
+                case 'local':
+                bookBag[i].x = (20 + (i * 30));
+                bookBag[i].y = 680 ;
+               bookBag[i].refreshBody();
+                    bookBag[i] = book.create(20 + (i * 30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.blue);
+                    bookBag[i].name = "local"
+                    break
+                case 'occult':
+                bookBag[i].x = (20 + (i * 30));
+                bookBag[i].y = 680 ;
+               bookBag[i].refreshBody();
+                    // bookBag[i] = book.create(20 + (i * 30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.green);
+                    // bookBag[i].name = "occult"
+                    break
+                case 'history':
+                bookBag[i].x = (20 + (i * 30));
+                bookBag[i].y = 680 ;
+               bookBag[i].refreshBody();
+                    // bookBag[i] = book.create(20 + (i * 30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.yellow);
+                    // bookBag[i].name = "history"
+                    break
+                    default: console.log('default');
+
+            }
+
 
         }
-     
-        
-     }
     }
 }
 
@@ -593,4 +617,3 @@ function getRandomIntInclusive(min, max) {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
 }
-
