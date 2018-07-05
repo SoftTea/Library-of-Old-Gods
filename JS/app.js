@@ -41,16 +41,13 @@ const bookBag = [];
 let bookBagFull;
 let bookCheck;
 const bookCheckContainer = [];
-const exorcise = {
-
-};
+let exorcise;
+const excorciseContainer = [];
 const bookReturn = {
 
 };
-const photoCopy = {
-
-
-};
+let photoCopy;
+const photoCopyContainer = [];
 const monsterClear = {
 
 };
@@ -94,10 +91,10 @@ function create() {
     //     //  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = this.physics.add.staticGroup();
     book = this.physics.add.staticGroup();
-
-    console.log(book)
+    exorcise = this.physics.add.staticGroup();
+    
     bookCheck = this.physics.add.staticGroup();
-
+    photoCopy = this.physics.add.staticGroup();
     computer = this.physics.add.staticGroup();
 
     //     //  Here we create the ground.
@@ -143,17 +140,21 @@ function create() {
 
     this.add.text(600, 450, "Book Check");
 
+    bookCheck.children.entries[0].storage = []
+    bookCheck.children.entries[1].storage = []
     // Photocopy
 
-    this.add.text(895, 100, "Photocopy")
-    photoCopy.image = this.physics.add.sprite(992, 150, 'consumable', 'sprite29').setScale(2.5);
+     this.add.text(895, 100, "Photocopy")
+    photoCopy.create(992, 150, 'consumable', 'sprite29').setScale(2.5).refreshBody().name = 'photocopy';
+    photoCopy.children.entries[0].storage = []
 
 
     // book.create(450, 500, 'book').setScale(.15).refreshBody();
 
     // Exorcize station 
     this.add.text(830, 500, 'Exorcise').setAngle(45);
-    exorcise.image = this.physics.add.sprite(850, 581, 'consumable', 'sprite27').setScale(2.5);
+    exorcise.create(850, 581, 'consumable', 'sprite27').setScale(2.5).refreshBody().name = 'exorcise';
+    exorcise.children.entries[0].storage = [];
 
     // MonsterClear
 
@@ -332,6 +333,9 @@ function update() {
     if (bookBag.length >= 4 && Phaser.Input.Keyboard.JustDown(aButton)) {
 
         doWhenNear(nextTo1(player, bookCheck));
+        doWhenNear(nextTo1(player,exorcise));
+        doWhenNear(nextTo1(player,photoCopy));
+
     }
     if (bookBag.length < 4) {
         nextTo(player, book);
@@ -424,22 +428,58 @@ function update() {
 // }
 
 function doWhenNear(nextToX) {
-    // console.log(nextToX);
-    if (nextToX.name === 'bookCheck' && bookBag[0].name === 'science') {
+    console.log(nextToX);
+    if (nextToX.name === 'bookCheck' && bookBag[0].name === 'science' || bookBag[0].name === 'history' && nextToX.name === 'bookCheck') {
         console.log('dowhennear');
+        // nextToX.storage = [];
+        let x = nextToX.storage.length
         let transfer = bookBag.shift();
         bookBag.push('BookWaitingPickUp')
-        bookCheckContainer[0] = transfer
-        bookCheckContainer[0].x = nextToX.x;
-        bookCheckContainer[0].y = nextToX.y;
-        bookCheckContainer[0].refreshBody();
-        bookCheckContainer[0].depth = 99;
+        nextToX.storage[x] = transfer
+        nextToX.storage[x].x = nextToX.x;
+        nextToX.storage[x].y = nextToX.y;
+        nextToX.storage[x].refreshBody();
+        nextToX.storage[x].depth = 99;
         bookBagFull.setText("Books Proccesing");
+
+        console.log( nextToX.storage.length)
        
         // bookCheck.hold.x = nextToX.x;
         // bookCheck.hold.y = nextToX.y;
-    }
+    } else if (nextToX.name === 'exorcise' && bookBag[0].name === 'occult') {
+        console.log('dowhennear');
+        // nextToX.storage = [];
+        let x = nextToX.storage.length
+        let transfer = bookBag.shift();
+        bookBag.push('BookWaitingPickUp')
+        nextToX.storage[x] = transfer
+        nextToX.storage[x].x = nextToX.x;
+        nextToX.storage[x].y = nextToX.y;
+        nextToX.storage[x].refreshBody();
+        nextToX.storage[x].depth = 99;
+        bookBagFull.setText("Books Proccesing");
 
+        console.log( nextToX.storage.length)
+       
+        // bookCheck.hold.x = nextToX.x;
+        // bookCheck.hold.y = nextToX.y;
+    } else if (nextToX.name === 'photocopy' && bookBag[0].name === 'local') {
+        console.log('dowhennear');
+        // nextToX.storage = [];
+        let x = nextToX.storage.length
+        let transfer = bookBag.shift();
+        bookBag.push('BookWaitingPickUp')
+        nextToX.storage[x] = transfer
+        nextToX.storage[x].x = nextToX.x;
+        nextToX.storage[x].y = nextToX.y;
+        nextToX.storage[x].refreshBody();
+        nextToX.storage[x].depth = 99;
+        bookBagFull.setText("Books Proccesing");
+
+        console.log( nextToX.storage.length)
+        // bookCheck.hold.x = nextToX.x;
+        // bookCheck.hold.y = nextToX.y;
+    } 
 }
 
 function nextTo1(player, group) {
@@ -547,8 +587,8 @@ function booksInHandDisplay() {
                 bookBag[i].x = (20 + (i * 30));
                 bookBag[i].y = 680 ;
                bookBag[i].refreshBody();
-                    bookBag[i] = book.create(20 + (i * 30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.blue);
-                    bookBag[i].name = "local"
+                    // bookBag[i] = book.create(20 + (i * 30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.blue);
+                    // bookBag[i].name = "local"
                     break
                 case 'occult':
                 bookBag[i].x = (20 + (i * 30));
