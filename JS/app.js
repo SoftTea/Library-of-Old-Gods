@@ -16,15 +16,7 @@ var config = {
     }
 };
 
-class Book {
-    constructor(type, x, y, color) {
-        this.type = type;
-        this.x = x;
-        this.y = y;
-        this.color = color;
 
-    }
-}
 let player;
 let playerContainer;
 let crystal;
@@ -92,7 +84,7 @@ function create() {
     platforms = this.physics.add.staticGroup();
     book = this.physics.add.staticGroup();
     exorcise = this.physics.add.staticGroup();
-    
+
     bookCheck = this.physics.add.staticGroup();
     photoCopy = this.physics.add.staticGroup();
     computer = this.physics.add.staticGroup();
@@ -144,7 +136,7 @@ function create() {
     bookCheck.children.entries[1].storage = []
     // Photocopy
 
-     this.add.text(895, 100, "Photocopy")
+    this.add.text(895, 100, "Photocopy")
     photoCopy.create(992, 150, 'consumable', 'sprite29').setScale(2.5).refreshBody().name = 'photocopy';
     photoCopy.children.entries[0].storage = []
 
@@ -333,8 +325,8 @@ function update() {
     if (bookBag.length >= 4 && aButton.isDown) {
 
         doWhenNear(nextTo1(player, bookCheck));
-        doWhenNear(nextTo1(player,exorcise));
-        doWhenNear(nextTo1(player,photoCopy));
+        doWhenNear(nextTo1(player, exorcise));
+        doWhenNear(nextTo1(player, photoCopy));
 
     }
     if (bookBag.length < 4 && aButton.isDown) {
@@ -430,69 +422,69 @@ function update() {
 function doWhenNear(nextToX) {
     // console.log(nextToX);
     if (nextToX.name === 'bookCheck' && bookBag[0].name === 'science' || bookBag[0].name === 'history' && nextToX.name === 'bookCheck') {
-        if(nextToX.storage.length > 0 ){
+        if (nextToX.storage.length > 0) {
             placedInGameObj(nextToX);
-        }
-        else {
-        console.log('dowhennear');
-        // nextToX.storage = [];
-        let x = nextToX.storage.length
-        let transfer = bookBag.shift();
-        bookBag.push('BookWaitingPickUp')
-        nextToX.storage[x] = transfer
-        nextToX.storage[x].x = nextToX.x;
-        nextToX.storage[x].y = nextToX.y;
-        nextToX.storage[x].refreshBody();
-        nextToX.storage[x].depth = 99;
-        bookBagFull.setText("Books Proccesing");
+        } else {
+            console.log('dowhennear');
+            // nextToX.storage = [];
+            let x = nextToX.storage.length
+            let transfer = bookBag.shift();
+            bookBag.push('BookWaitingPickUp')
+            nextToX.storage[x] = transfer
+            nextToX.storage[x].x = nextToX.x;
+            nextToX.storage[x].y = nextToX.y;
+            nextToX.storage[x].refreshBody();
+            nextToX.storage[x].depth = 99;
+            bookBagFull.setText("Books Proccesing");
 
-        console.log( nextToX.storage.length) }
-       
+            console.log(nextToX.storage.length)
+        }
+
         // bookCheck.hold.x = nextToX.x;
         // bookCheck.hold.y = nextToX.y;
     } else if (nextToX.name === 'exorcise' && bookBag[0].name === 'occult') {
-        if(nextToX.storage.length > 0 ){
+        if (nextToX.storage.length > 0) {
             placedInGameObj(nextToX);
-        }
-        else {
-        console.log('dowhennear');
-        // nextToX.storage = [];
-        let x = nextToX.storage.length
-        let transfer = bookBag.shift();
-        bookBag.push('BookWaitingPickUp')
-        nextToX.storage[x] = transfer
-        nextToX.storage[x].x = nextToX.x;
-        nextToX.storage[x].y = nextToX.y;
-        nextToX.storage[x].refreshBody();
-        nextToX.storage[x].depth = 99;
-        bookBagFull.setText("Books Proccesing");
+        } else {
+            console.log('dowhennear');
+            // nextToX.storage = [];
+            let x = nextToX.storage.length
+            let transfer = bookBag.shift();
+            bookBag.push('BookWaitingPickUp')
+            nextToX.storage[x] = transfer
+            nextToX.storage[x].x = nextToX.x;
+            nextToX.storage[x].y = nextToX.y;
+            nextToX.storage[x].refreshBody();
+            nextToX.storage[x].depth = 99;
+            bookBagFull.setText("Books Proccesing");
 
-        console.log( nextToX.storage.length) }
-       
+            console.log(nextToX.storage.length)
+        }
+
         // bookCheck.hold.x = nextToX.x;
         // bookCheck.hold.y = nextToX.y;
     } else if (nextToX.name === 'photocopy' && bookBag[0].name === 'local') {
-        if(nextToX.storage.length > 0 ){
+        if (nextToX.storage.length > 0) {
             placedInGameObj(nextToX);
-        }
-        else {
-        console.log('dowhennear');
-        // nextToX.storage = [];
-        let x = nextToX.storage.length
-        let transfer = bookBag.shift();
-        bookBag.push('BookWaitingPickUp')
-        nextToX.storage[x] = transfer
-        nextToX.storage[x].x = nextToX.x;
-        nextToX.storage[x].y = nextToX.y;
-        nextToX.storage[x].refreshBody();
-        nextToX.storage[x].depth = 99;
-        bookBagFull.setText("Books Proccesing");
+        } else {
+            console.log('dowhennear');
+            // nextToX.storage = [];
+            let x = nextToX.storage.length
+            let transfer = bookBag.shift();
+            bookBag.push('BookWaitingPickUp')
+            nextToX.storage[x] = transfer
+            nextToX.storage[x].x = nextToX.x;
+            nextToX.storage[x].y = nextToX.y;
+            nextToX.storage[x].refreshBody();
+            nextToX.storage[x].depth = 99;
+            bookBagFull.setText("Books Proccesing");
 
-        console.log( nextToX.storage.length) }
-       
+            console.log(nextToX.storage.length)
+        }
+
         // bookCheck.hold.x = nextToX.x;
         // bookCheck.hold.y = nextToX.y;
-    } 
+    }
 }
 
 function nextTo1(player, group) {
@@ -534,7 +526,7 @@ function nextTo(player, group) {
         if (diffOfX < 40 && diffOfX > (-40) && diffOfY > (-50) && diffOfY < (50) && Phaser.Input.Keyboard.JustDown(aButton)) {
             console.log(bookBag);
             bookBag.push(group.children.entries[i]);
-            
+
 
             // group.children.entries[i].destroy();
 
@@ -590,34 +582,35 @@ function booksInHandDisplay() {
             switch (bookBag[i].name) {
                 case 'science':
                     bookBag[i].x = (20 + (i * 30));
-                    bookBag[i].y = 680 ;
-                   bookBag[i].refreshBody();
-                //    .setTint(colorCodes.purple);
+                    bookBag[i].y = 680;
+                    bookBag[i].refreshBody();
+                    //    .setTint(colorCodes.purple);
 
                     // bookBag[i].name = "science"
                     break;
                 case 'local':
-                bookBag[i].x = (20 + (i * 30));
-                bookBag[i].y = 680 ;
-               bookBag[i].refreshBody();
+                    bookBag[i].x = (20 + (i * 30));
+                    bookBag[i].y = 680;
+                    bookBag[i].refreshBody();
                     // bookBag[i] = book.create(20 + (i * 30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.blue);
                     // bookBag[i].name = "local"
                     break
                 case 'occult':
-                bookBag[i].x = (20 + (i * 30));
-                bookBag[i].y = 680 ;
-               bookBag[i].refreshBody();
+                    bookBag[i].x = (20 + (i * 30));
+                    bookBag[i].y = 680;
+                    bookBag[i].refreshBody();
                     // bookBag[i] = book.create(20 + (i * 30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.green);
                     // bookBag[i].name = "occult"
                     break
                 case 'history':
-                bookBag[i].x = (20 + (i * 30));
-                bookBag[i].y = 680 ;
-               bookBag[i].refreshBody();
+                    bookBag[i].x = (20 + (i * 30));
+                    bookBag[i].y = 680;
+                    bookBag[i].refreshBody();
                     // bookBag[i] = book.create(20 + (i * 30), 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.yellow);
                     // bookBag[i].name = "history"
                     break
-                    default: console.log('default');
+                default:
+                    console.log('default');
 
             }
 
@@ -663,7 +656,7 @@ function randomLocalLore() {
     }
 }
 
-function placedInGameObj (gameObj) {
+function placedInGameObj(gameObj) {
     console.log('test')
     console.log(gameObj)
 }
