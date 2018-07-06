@@ -330,17 +330,17 @@ function update() {
     //     book.create(0, 680, 'book').setScale(.12).refreshBody().setTint(colorCodes.yellow);
     // }
 
-    if (bookBag.length >= 4 && Phaser.Input.Keyboard.JustDown(aButton)) {
+    if (bookBag.length >= 4 && aButton.isDown) {
 
         doWhenNear(nextTo1(player, bookCheck));
         doWhenNear(nextTo1(player,exorcise));
         doWhenNear(nextTo1(player,photoCopy));
 
     }
-    if (bookBag.length < 4) {
+    if (bookBag.length < 4 && aButton.isDown) {
         nextTo(player, book);
 
-    } else {
+    } else if (bookBag.length >= 4) {
         bookBagFull.visible = true;
     }
 
@@ -428,8 +428,12 @@ function update() {
 // }
 
 function doWhenNear(nextToX) {
-    console.log(nextToX);
+    // console.log(nextToX);
     if (nextToX.name === 'bookCheck' && bookBag[0].name === 'science' || bookBag[0].name === 'history' && nextToX.name === 'bookCheck') {
+        if(nextToX.storage.length > 0 ){
+            placedInGameObj(nextToX);
+        }
+        else {
         console.log('dowhennear');
         // nextToX.storage = [];
         let x = nextToX.storage.length
@@ -442,11 +446,15 @@ function doWhenNear(nextToX) {
         nextToX.storage[x].depth = 99;
         bookBagFull.setText("Books Proccesing");
 
-        console.log( nextToX.storage.length)
+        console.log( nextToX.storage.length) }
        
         // bookCheck.hold.x = nextToX.x;
         // bookCheck.hold.y = nextToX.y;
     } else if (nextToX.name === 'exorcise' && bookBag[0].name === 'occult') {
+        if(nextToX.storage.length > 0 ){
+            placedInGameObj(nextToX);
+        }
+        else {
         console.log('dowhennear');
         // nextToX.storage = [];
         let x = nextToX.storage.length
@@ -459,11 +467,15 @@ function doWhenNear(nextToX) {
         nextToX.storage[x].depth = 99;
         bookBagFull.setText("Books Proccesing");
 
-        console.log( nextToX.storage.length)
+        console.log( nextToX.storage.length) }
        
         // bookCheck.hold.x = nextToX.x;
         // bookCheck.hold.y = nextToX.y;
     } else if (nextToX.name === 'photocopy' && bookBag[0].name === 'local') {
+        if(nextToX.storage.length > 0 ){
+            placedInGameObj(nextToX);
+        }
+        else {
         console.log('dowhennear');
         // nextToX.storage = [];
         let x = nextToX.storage.length
@@ -476,7 +488,8 @@ function doWhenNear(nextToX) {
         nextToX.storage[x].depth = 99;
         bookBagFull.setText("Books Proccesing");
 
-        console.log( nextToX.storage.length)
+        console.log( nextToX.storage.length) }
+       
         // bookCheck.hold.x = nextToX.x;
         // bookCheck.hold.y = nextToX.y;
     } 
@@ -497,7 +510,7 @@ function nextTo1(player, group) {
 
         // console.log('diffOfX', diffOfX, "diffOfY", diffOfY, 'diffOfWidth', widthOfPlayer, "height", heightOfPlayer );
 
-        if (diffOfX < 40 && diffOfX > (-40) && diffOfY > (-50) && diffOfY < (50) && aButton.isDown) {
+        if (diffOfX < 40 && diffOfX > (-40) && diffOfY > (-50) && diffOfY < (50) && Phaser.Input.Keyboard.JustDown(aButton)) {
             //  console.log('test');
             return group.children.entries[i]
             //  return group.children.entries[i];
@@ -518,7 +531,7 @@ function nextTo(player, group) {
 
         // console.log('diffOfX', diffOfX, "diffOfY", diffOfY, 'diffOfWidth', widthOfPlayer, "height", heightOfPlayer );
 
-        if (diffOfX < 40 && diffOfX > (-40) && diffOfY > (-50) && diffOfY < (50) && aButton.isDown) {
+        if (diffOfX < 40 && diffOfX > (-40) && diffOfY > (-50) && diffOfY < (50) && Phaser.Input.Keyboard.JustDown(aButton)) {
             console.log(bookBag);
             bookBag.push(group.children.entries[i]);
             
@@ -648,6 +661,11 @@ function randomLocalLore() {
         const localLore = book.create(getRandomIntInclusive(0, 150), 495, 'book').setScale(.12).refreshBody().setTint(colorCodes.blue);
         localLore.name = 'local'
     }
+}
+
+function placedInGameObj (gameObj) {
+    console.log('test')
+    console.log(gameObj)
 }
 
 
